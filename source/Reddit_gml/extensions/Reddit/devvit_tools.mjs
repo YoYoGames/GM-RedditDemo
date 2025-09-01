@@ -380,18 +380,18 @@ async function expandPlaceholderInTree(rootDir, placeholder, replacement, { rena
 
     const subredditDev = getExtensionOption("Reddit", "subredditDev", "");
     const subredditProd = getExtensionOption("Reddit", "subredditProd", "");
-    const templateUrl = "https://github.com/reddit/devvit-tempProde-hello-world.git";
+    const templateUrl = "https://github.com/reddit/devvit-template-hello-world.git";
     const sourceDir = getEnvInsensitive("YYoutputFolder");
 
-    console.log(`[INFO] Reddit extension version: ${getExtensiProdersion("Reddit")}`);
+    console.log(`[INFO] Reddit extension version: ${getExtensionVersion("Reddit")}`);
 
     if (!outputDir.trim() || !projectName.trim()) {
-        console.error("[ERROR] Missing required extension optiProd: 'outputDirectory' and 'projectName'.");
+        console.error("[ERROR] Missing required extension options: 'outputDirectory' and 'projectName'.");
         process.exit(1);
     }
 
     if (!isValidProjectName(projectName)) {
-        console.error("[ERROR] Invalid project name provided: Prod names must be between 3 and 16 characters long, and can contain lowercase letters, numbers, and hyphens.");
+        console.error("[ERROR] Invalid project name provided: project names must be between 3 and 16 characters long, and can contain lowercase letters, numbers, and hyphens.");
         process.exit(1);
     }
 
