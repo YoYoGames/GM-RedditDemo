@@ -13,7 +13,7 @@
   "name":"snd_shoot",
   "parent":{
     "name":"Player",
-    "path":"folders/ChickenGame/Sounds/Player.yy",
+    "path":"folders/Reddit Demo/Sounds/Player.yy",
   },
   "preload":true,
   "resourceType":"GMSound",

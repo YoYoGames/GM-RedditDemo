@@ -39,7 +39,7 @@
   "name":"rm_level3",
   "parent":{
     "name":"Rooms",
-    "path":"folders/ChickenGame/Rooms.yy",
+    "path":"folders/Reddit Demo/Rooms.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

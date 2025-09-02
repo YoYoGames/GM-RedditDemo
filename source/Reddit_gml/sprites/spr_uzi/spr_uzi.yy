@@ -29,7 +29,7 @@
   "origin":9,
   "parent":{
     "name":"Weapons",
-    "path":"folders/ChickenGame/Sprites/Weapons.yy",
+    "path":"folders/Reddit Demo/Sprites/Weapons.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

@@ -15,7 +15,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Character",
-    "path":"folders/ChickenGame/Objects/Character.yy",
+    "path":"folders/Reddit Demo/Objects/Character.yy",
   },
   "parentObjectId":{
     "name":"obj_player_parent",

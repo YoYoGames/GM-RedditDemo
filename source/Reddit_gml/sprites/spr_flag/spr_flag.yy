@@ -26,7 +26,7 @@
   "origin":7,
   "parent":{
     "name":"Environment",
-    "path":"folders/ChickenGame/Sprites/Environment.yy",
+    "path":"folders/Reddit Demo/Sprites/Environment.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

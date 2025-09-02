@@ -26,7 +26,7 @@
   "origin":9,
   "parent":{
     "name":"FX",
-    "path":"folders/ChickenGame/Sprites/FX.yy",
+    "path":"folders/Reddit Demo/Sprites/FX.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

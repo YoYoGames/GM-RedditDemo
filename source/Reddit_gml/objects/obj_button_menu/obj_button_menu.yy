@@ -11,7 +11,7 @@
   ],
   "parent":{
     "name":"UI",
-    "path":"folders/ChickenGame/Objects/UI.yy",
+    "path":"folders/Reddit Demo/Objects/UI.yy",
   },
   "parentObjectId":{
     "name":"obj_button_parent",

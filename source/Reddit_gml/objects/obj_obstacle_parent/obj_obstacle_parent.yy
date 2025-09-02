@@ -12,7 +12,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Obstacles",
-    "path":"folders/ChickenGame/Objects/Obstacles.yy",
+    "path":"folders/Reddit Demo/Objects/Obstacles.yy",
   },
   "parentObjectId":null,
   "persistent":false,

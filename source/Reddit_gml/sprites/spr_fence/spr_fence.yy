@@ -26,7 +26,7 @@
   "origin":0,
   "parent":{
     "name":"Obstacles",
-    "path":"folders/ChickenGame/Sprites/Obstacles.yy",
+    "path":"folders/Reddit Demo/Sprites/Obstacles.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

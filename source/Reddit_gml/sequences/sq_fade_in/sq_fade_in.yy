@@ -33,7 +33,7 @@
   "name":"sq_fade_in",
   "parent":{
     "name":"Sequences",
-    "path":"folders/ChickenGame/Sequences.yy",
+    "path":"folders/Reddit Demo/Sequences.yy",
   },
   "playback":0,
   "playbackSpeed":60.0,

@@ -120,7 +120,7 @@
   "name":"fnt_text",
   "parent":{
     "name":"Fonts",
-    "path":"folders/ChickenGame/Fonts.yy",
+    "path":"folders/Reddit Demo/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[
@@ -134,7 +134,10 @@
   "sdfSpread":8,
   "size":12.0,
   "styleName":"Regular",
-  "textureGroupId":null,
+  "textureGroupId":{
+    "name":"Default",
+    "path":"texturegroups/Default",
+  },
   "TTFName":"${project_dir}\\fonts\\fn_chicken\\Chicken Font (1).ttf",
   "usesSDF":false,
 }

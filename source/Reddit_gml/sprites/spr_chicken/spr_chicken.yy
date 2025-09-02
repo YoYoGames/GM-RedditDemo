@@ -48,7 +48,7 @@
   "origin":9,
   "parent":{
     "name":"Character",
-    "path":"folders/ChickenGame/Sprites/Character.yy",
+    "path":"folders/Reddit Demo/Sprites/Character.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

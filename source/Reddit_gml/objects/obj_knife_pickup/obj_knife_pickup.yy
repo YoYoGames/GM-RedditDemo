@@ -9,7 +9,7 @@
   ],
   "parent":{
     "name":"Weapons",
-    "path":"folders/ChickenGame/Objects/Weapons.yy",
+    "path":"folders/Reddit Demo/Objects/Weapons.yy",
   },
   "parentObjectId":{
     "name":"obj_pickup_parent",

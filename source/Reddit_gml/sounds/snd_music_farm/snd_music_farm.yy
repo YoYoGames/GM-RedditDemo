@@ -13,7 +13,7 @@
   "name":"snd_music_farm",
   "parent":{
     "name":"MUSIC",
-    "path":"folders/ChickenGame/Sounds/MUSIC.yy",
+    "path":"folders/Reddit Demo/Sounds/MUSIC.yy",
   },
   "preload":true,
   "resourceType":"GMSound",

@@ -45,7 +45,7 @@
   "origin":4,
   "parent":{
     "name":"UI",
-    "path":"folders/ChickenGame/Sprites/UI.yy",
+    "path":"folders/Reddit Demo/Sprites/UI.yy",
   },
   "preMultiplyAlpha":false,
   "resourceType":"GMSprite",

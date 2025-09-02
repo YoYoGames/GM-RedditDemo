@@ -14,7 +14,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Game System",
-    "path":"folders/ChickenGame/Objects/Game System.yy",
+    "path":"folders/Reddit Demo/Objects/Game System.yy",
   },
   "parentObjectId":null,
   "persistent":true,

@@ -11,7 +11,7 @@
   ],
   "parent":{
     "name":"Obstacles",
-    "path":"folders/ChickenGame/Objects/Obstacles.yy",
+    "path":"folders/Reddit Demo/Objects/Obstacles.yy",
   },
   "parentObjectId":{
     "name":"obj_obstacle_parent",

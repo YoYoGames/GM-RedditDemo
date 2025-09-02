@@ -27,7 +27,7 @@
   "name":"sq_pause_screen",
   "parent":{
     "name":"Sequences",
-    "path":"folders/ChickenGame/Sequences.yy",
+    "path":"folders/Reddit Demo/Sequences.yy",
   },
   "playback":1,
   "playbackSpeed":60.0,

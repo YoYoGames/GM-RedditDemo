@@ -6,7 +6,7 @@
   "name":"Transitions",
   "parent":{
     "name":"Scripts",
-    "path":"folders/ChickenGame/Scripts.yy",
+    "path":"folders/Reddit Demo/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

@@ -2,7 +2,6 @@
 import { spawn } from "node:child_process";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import { fileURLToPath } from "node:url";
 
 /* ---------- utils ---------- */
 
@@ -136,6 +135,7 @@ function getExtensionOption(extName, option, dflt = undefined) {
 function getExtensionOptionBool(extName, option, dflt = false) {
     return envToBool(getExtensionOption(extName, option), dflt);
 }
+
 function getExtensionOptionInt(extName, option, dflt = 0) {
     return envToInt(getExtensionOption(extName, option), dflt);
 }

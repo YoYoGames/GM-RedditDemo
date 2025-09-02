@@ -13,7 +13,7 @@
   "name":"snd_select",
   "parent":{
     "name":"Menu",
-    "path":"folders/ChickenGame/Sounds/Menu.yy",
+    "path":"folders/Reddit Demo/Sounds/Menu.yy",
   },
   "preload":true,
   "resourceType":"GMSound",

@@ -7,7 +7,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Collision",
-    "path":"folders/ChickenGame/Objects/Collision.yy",
+    "path":"folders/Reddit Demo/Objects/Collision.yy",
   },
   "parentObjectId":null,
   "persistent":false,

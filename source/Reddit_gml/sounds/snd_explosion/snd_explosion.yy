@@ -13,7 +13,7 @@
   "name":"snd_explosion",
   "parent":{
     "name":"Obstacles",
-    "path":"folders/ChickenGame/Sounds/Obstacles.yy",
+    "path":"folders/Reddit Demo/Sounds/Obstacles.yy",
   },
   "preload":true,
   "resourceType":"GMSound",

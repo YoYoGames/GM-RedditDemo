@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Environment",
-    "path":"folders/ChickenGame/Objects/Environment.yy",
+    "path":"folders/Reddit Demo/Objects/Environment.yy",
   },
   "parentObjectId":null,
   "persistent":false,
