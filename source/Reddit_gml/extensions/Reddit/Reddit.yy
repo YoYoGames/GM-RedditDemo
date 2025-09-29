@@ -11,7 +11,7 @@
   "androidsourcedir":"",
   "author":"",
   "classname":"",
-  "copyToTargets":32,
+  "copyToTargets":17179869184,
   "description":"",
   "exportToGame":true,
   "extensionVersion":"0.0.1",
@@ -38,13 +38,9 @@
   "name":"Reddit",
   "options":[
     {"$GMExtensionOption":"","%Name":"__extOptLabel1","defaultValue":"BUILD OPTIONS:","description":"","displayName":"","exportToINI":false,"extensionId":null,"guid":"441c2104-5009-48cf-8a08-d747c5ea81ce","hidden":false,"listItems":[],"name":"__extOptLabel1","optType":5,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
-    {"$GMExtensionOption":"","%Name":"processOnRun","defaultValue":"False","description":"","displayName":"Process On Run","exportToINI":false,"extensionId":null,"guid":"86f05a54-a406-4559-a50b-9ef347d78f04","hidden":false,"listItems":[],"name":"processOnRun","optType":0,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
     {"$GMExtensionOption":"","%Name":"outputPath","defaultValue":"","description":"The path where the project folder is located or should be created.","displayName":"Output Path","exportToINI":false,"extensionId":null,"guid":"6091dc13-ac0c-417c-abb5-6f393ca63445","hidden":false,"listItems":[],"name":"outputPath","optType":4,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
-    {"$GMExtensionOption":"","%Name":"autoCreate","defaultValue":"True","description":"Creates project if it doesn't exist.","displayName":"Auto Create","exportToINI":false,"extensionId":null,"guid":"1f564823-c893-45ef-9659-3686fe46a381","hidden":false,"listItems":[],"name":"autoCreate","optType":0,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
-    {"$GMExtensionOption":"","%Name":"autoPlaytest","defaultValue":"True","description":"Uploads and inits playtest mode.","displayName":"Auto Playtest","exportToINI":false,"extensionId":null,"guid":"1da89b10-d9ae-4eef-b23a-0323c009b9b5","hidden":false,"listItems":[],"name":"autoPlaytest","optType":0,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
     {"$GMExtensionOption":"","%Name":"__extOptLabel","defaultValue":"PROJECT INFO:","description":"","displayName":"","exportToINI":false,"extensionId":null,"guid":"00431e01-20bc-45a9-a587-ad561b12f810","hidden":false,"listItems":[],"name":"__extOptLabel","optType":5,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
     {"$GMExtensionOption":"","%Name":"projectName","defaultValue":"","description":"The name of your project.","displayName":"Project Name","exportToINI":false,"extensionId":null,"guid":"3a723152-f91c-4f15-9cba-88dd93a75c5b","hidden":false,"listItems":[],"name":"projectName","optType":2,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
-    {"$GMExtensionOption":"","%Name":"subredditName","defaultValue":"","description":"The name of the test subreddit","displayName":"Subreddit Name","exportToINI":false,"extensionId":null,"guid":"491d8222-bb04-42aa-ac1b-c069d41a0c8d","hidden":false,"listItems":[],"name":"subredditName","optType":2,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
     {"$GMExtensionOption":"","%Name":"__extOptLabel2","defaultValue":"EXTRA OPTIONS:","description":"","displayName":"","exportToINI":false,"extensionId":null,"guid":"0af54e48-1266-4c00-a530-96665cc9c967","hidden":false,"listItems":[],"name":"__extOptLabel2","optType":5,"resourceType":"GMExtensionOption","resourceVersion":"2.0",},
     {"$GMExtensionOption":"","%Name":"logLevel","defaultValue":"0","description":"The log level to be used by the script file.\r\n0: Show only errors\r\n1: Show errors and warnings (recommended)\r\n2: Show everything (use before submitting a bug)","displayName":"Log Level","exportToINI":false,"extensionId":null,"guid":"f169d6b1-7782-4000-a166-8a613cac769a","hidden":false,"listItems":[
         "0",

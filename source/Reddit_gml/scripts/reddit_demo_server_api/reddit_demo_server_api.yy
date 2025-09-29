@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"reddit_demo_server_api",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"reddit_demo_server_api",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Reddit Demo/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

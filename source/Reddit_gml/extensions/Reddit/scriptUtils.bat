@@ -402,6 +402,103 @@ exit /b 0
     call :logInformation "Asserted that version '%~1' equals version '%~2'."
 exit /b 0
 
+
+:: PLACEHOLDER EXPANSION
+
+:: Usage (args):  call %Utils% expandPlaceholder "." "<%%%% name %%%%>" "%PROJECT_NAME%" 0
+:: Usage (env):   set "PS_PH=<%% name %%>" & set "PS_REP=%PROJECT_NAME%" & call %Utils% expandPlaceholder "." 0
+:expandPlaceholder baseDir [placeholder] [replacement] [renamePaths=0|1]
+    call :pathResolveExisting "%cd%" "%~1" _TARGET_DIR || exit /b 1
+
+    rem Args win; fall back to env if missing
+    if not "%~2"=="" set "PS_PH=%~2"
+    if not "%~3"=="" set "PS_REP=%~3"
+
+    if not defined PS_PH ( call :logError "PS_PH not set (placeholder)"; exit /b 1 )
+    if not defined PS_REP ( call :logError "PS_REP not set (replacement)"; exit /b 1 )
+
+    if "%~4"=="1" ( set "_RENAME=1" ) else ( set "_RENAME=0" )
+
+    call :_replacePlaceholdersInFiles "%_TARGET_DIR%" || ( set "PS_PH=" & set "PS_REP=" & exit /b 1 )
+    if "%_RENAME%"=="1" call :_renamePlaceholdersInPaths "%_TARGET_DIR%" || ( set "PS_PH=" & set "PS_REP=" & exit /b 1 )
+
+    call :logInformation "Expanded placeholder '%%PS_PH%%' -> '%%PS_REP%%' under '%_TARGET_DIR%'."
+    set "PS_PH="
+    set "PS_REP="
+exit /b 0
+
+::_replacePlaceholdersInFiles dir
+:_replacePlaceholdersInFiles
+    setlocal
+    set "PS_DIR=%~1"
+    set "PS1=%TEMP%\expand_files_%RANDOM%%RANDOM%.ps1"
+
+    >"%PS1%"  echo $ErrorActionPreference='Stop'
+    >>"%PS1%" echo $dir = Resolve-Path $env:PS_DIR
+    >>"%PS1%" echo $ph  = $env:PS_PH
+    >>"%PS1%" echo $rep = $env:PS_REP
+    >>"%PS1%" echo $ph  = $ph  -replace '%%%%','%%'
+    >>"%PS1%" echo $rep = $rep -replace '%%%%','%%'
+    >>"%PS1%" echo $excludeDirs = @('.git','node_modules','dist','build')
+    >>"%PS1%" echo $excludeExt  = @('.png','.jpg','.jpeg','.gif','.ico','.pdf','.zip','.wasm','.mp3','.ogg')
+    >>"%PS1%" echo $i = 0
+    >>"%PS1%" echo Get-ChildItem -LiteralPath $dir -Recurse -File ^| ForEach-Object {
+    >>"%PS1%" echo ^  $p = $_.FullName
+    >>"%PS1%" echo ^  if ($excludeDirs ^| Where-Object { $p -like "*\$_\*" }) { return }
+    >>"%PS1%" echo ^  if ($excludeExt -contains $_.Extension.ToLower())      { return }
+    >>"%PS1%" echo ^  $text = Get-Content -LiteralPath $_.FullName -Raw
+    >>"%PS1%" echo ^  if ($ph -ne '' -and $text.Contains($ph)) {
+    >>"%PS1%" echo ^    Copy-Item -LiteralPath $_.FullName -Destination ($_.FullName + '.bak') -Force
+    >>"%PS1%" echo ^    $text = $text.Replace($ph,$rep)
+    >>"%PS1%" echo ^    $enc = New-Object System.Text.UTF8Encoding($false)
+    >>"%PS1%" echo ^    [System.IO.File]::WriteAllText($p, $text, $enc)
+    >>"%PS1%" echo ^    $i++
+    >>"%PS1%" echo ^  }
+    >>"%PS1%" echo }
+    >>"%PS1%" echo Write-Host ("Replaced in " + $i + " file(s).")
+
+    powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%PS1%"
+    set "EC=%ERRORLEVEL%"
+    del /q "%PS1%"
+    if not "%EC%"=="0" ( endlocal & call :logError "Failed replacing '%%PS_PH%%' -> '%%PS_REP%%' in '%~1'." & exit /b 1 )
+    endlocal
+    call :logInformation "Replaced placeholders in files under '%~1'."
+exit /b 0
+
+::_renamePlaceholdersInPaths dir
+:_renamePlaceholdersInPaths
+    setlocal
+    set "PS_DIR=%~1"
+    set "PS1=%TEMP%\expand_paths_%RANDOM%%RANDOM%.ps1"
+
+    >"%PS1%"  echo $ErrorActionPreference='Stop'
+    >>"%PS1%" echo $dir = Resolve-Path $env:PS_DIR
+    >>"%PS1%" echo $ph  = $env:PS_PH
+    >>"%PS1%" echo $rep = $env:PS_REP
+    >>"%PS1%" echo $ph  = $ph  -replace '%%%%','%%'
+    >>"%PS1%" echo $rep = $rep -replace '%%%%','%%'
+    >>"%PS1%" echo $excludeDirs = @('.git','node_modules','dist','build')
+    >>"%PS1%" echo $n = 0
+    >>"%PS1%" echo Get-ChildItem -LiteralPath $dir -Recurse -File,Directory ^| Sort-Object FullName -Descending ^| ForEach-Object {
+    >>"%PS1%" echo ^  $old = $_.FullName
+    >>"%PS1%" echo ^  if ($excludeDirs ^| Where-Object { $old -like "*\$_\*" }) { return }
+    >>"%PS1%" echo ^  if ($ph -ne '' -and $old -like ('*' + $ph + '*')) {
+    >>"%PS1%" echo ^    $new = $old.Replace($ph,$rep)
+    >>"%PS1%" echo ^    New-Item -ItemType Directory -Path (Split-Path -Parent $new) -Force ^| Out-Null
+    >>"%PS1%" echo ^    Move-Item -LiteralPath $old -Destination $new -Force
+    >>"%PS1%" echo ^    $n++
+    >>"%PS1%" echo ^  }
+    >>"%PS1%" echo }
+    >>"%PS1%" echo Write-Host ("Renamed " + $n + " path(s).")
+
+    powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File "%PS1%"
+    set "EC=%ERRORLEVEL%"
+    del /q "%PS1%"
+    if not "%EC%"=="0" ( endlocal & call :logError "Failed renaming paths '%%PS_PH%%' -> '%%PS_REP%%' in '%~1'." & exit /b 1 )
+    endlocal
+    call :logInformation "Renamed paths containing '%%PS_PH%%' under '%~1'."
+exit /b 0
+
 :: LOGGING
 
 :: Logs information
@@ -422,7 +519,11 @@ exit /b 0
 
 :: General log function
 :log tag message
-    echo [%LOG_LABEL%] %~1: %~2
+    setlocal EnableDelayedExpansion
+    set "TAG=%~1"
+    set "MSG=%~2"
+    echo([%LOG_LABEL%] !TAG!: !MSG!
+    endlocal
 exit /b 0
 
 
