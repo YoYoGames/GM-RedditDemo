@@ -1,212 +1,131 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -euo pipefail
 
-sed -i -e 's/\r$//' "$(dirname "$0")/scriptUtils.sh"
-chmod +x "$(dirname "$0")/scriptUtils.sh"
-source "$(dirname "$0")/scriptUtils.sh"
+# -----------------------------------------------------------------------------
+# Paths / utils
+# -----------------------------------------------------------------------------
+Utils="$(cd -- "$(dirname -- "$0")" && pwd)/scriptUtils.sh"
+# shellcheck source=/dev/null
+. "$Utils"
 
-# ######################################################################################
-# Script Functions
-
-# ----------------------------------------------------------------------------------------------------
-setupmacOS() {
-
-    # Resolve the SDK path (must exist)
-    pathResolveExisting "$YYprojectDir" "$MACOS_SDK_PATH" SDK_PATH
-
-    SDK_CORE_SOURCE="$SDK_PATH/api/core/lib/libfmodL.dylib"
-    SDK_STUDIO_SOURCE="$SDK_PATH/api/studio/lib/libfmodstudioL.dylib"
-
-    # assertFileHashEquals $SDK_CORE_SOURCE $MACOS_SDK_HASH "$ERROR_SDK_HASH"
-    
-    echo "Copying macOS (64 bit) dependencies"
-    if [[ "$YYTARGET_runtime" == "VM" ]]; then
-
-        # Assert if xcode-tools are installed (required)
-        assertXcodeToolsInstalled
-
-        itemCopyTo "$SDK_CORE_SOURCE" "./libfmodL.dylib"
-        codesign -s "${YYPLATFORM_option_mac_signing_identity}" -f --timestamp --verbose --options runtime "./libfmodL.dylib"
-
-        if [[ $ENABLE_STUDIO_FLAG == 1 ]]; then
-            itemCopyTo "$SDK_STUDIO_SOURCE" "./libfmodstudioL.dylib"
-            codesign -s "${YYPLATFORM_option_mac_signing_identity}" -f --timestamp --verbose --options runtime "./libfmodstudioL.dylib"
-        fi
-    else
-        itemCopyTo "$SDK_CORE_SOURCE" "${YYprojectName}/${YYprojectName}/Supporting Files/libfmodL.dylib"
-
-        if [[ $ENABLE_STUDIO_FLAG == 1 ]]; then
-            itemCopyTo "$SDK_STUDIO_SOURCE" "${YYprojectName}/${YYprojectName}/Supporting Files/libfmodstudioL.dylib"
-        fi
-    fi
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupLinux() {
-
-    # Resolve the SDK path (must exist)
-    pathResolveExisting "$YYprojectDir" "$LINUX_SDK_PATH" SDK_PATH
-
-    # Get library file paths
-    SDK_CORE_SOURCE="$SDK_PATH/api/core/lib/x86_64/libfmod.so.13"
-    SDK_STUDIO_SOURCE="$SDK_PATH/api/studio/lib/x86_64/libfmodstudio.so.13"
-
-    # assertFileHashEquals $SDK_CORE_SOURCE $LINUX_SDK_HASH "$ERROR_SDK_HASH"
-
-    echo "Copying Linux (64 bit) dependencies"
-    
-    # When running from CLI 'YYprojectName' will not be set, use 'YYprojectPath' instead.
-    if [ -z "$YYprojectName" ]; then
-        YYprojectName=$(basename "${YYprojectPath%.*}")
-    fi
-
-    fileExtract "${YYprojectName}.zip" "_temp"
-
-    if [[ ! -f "_temp/assets/libfmod.so.13" ]]; then 
-        itemCopyTo "$SDK_CORE_SOURCE" "_temp/assets/libfmod.so.13"
-
-        # Copy studio libs if enabled
-        if [[$ENABLE_STUDIO_FLAG == 1]]; then
-            [[ ! -f "_temp/assets/libfmodstudio.so.13" ]] && itemCopyTo "$SDK_STUDIO_SOURCE" "_temp/assets/libfmodstudio.so.13"
-        fi
-    fi
-
-    folderCompress "_temp" "${YYprojectName}.zip"
-    rm -r _temp
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupAndroid() {    
-    # Resolve the SDK path (must exist)
-    pathResolveExisting "$YYprojectDir" "$ANDROID_SDK_PATH" SDK_PATH
-
-    # assertFileHashEquals "$SDK_PATH/api/core/lib/arm64-v8a/libfmodL.so" $ANDROID_SDK_HASH "$ERROR_SDK_HASH"
-
-    pushd "$ExtensionPath/AndroidSource/libs" >/dev/null
-
-    # Handle arm64-v8a architecture
-    if [[ "$YYPLATFORM_option_android_arch_arm64" == "True" ]]; then
-        echo "Copying Android (arm64-v8a) dependencies"
-        [[ ! -d "arm64-v8a/" ]] && mkdir "arm64-v8a"
-        [[ ! -f "arm64-v8a/libfmodL.so" ]] && itemCopyTo "$SDK_PATH/api/core/lib/arm64-v8a/libfmodL.so" "arm64-v8a/libfmodL.so"
-        [[ ! -f "arm64-v8a/libfmodL.so" ]] && itemCopyTo "$SDK_PATH/api/studio/lib/arm64-v8a/libfmodstudioL.so" "arm64-v8a/libfmodstudioL.so"
-    else
-        if exist "arm64-v8a"; then
-            itemDelete "arm64-v8a/libfmodL.so"
-            itemDelete "arm64-v8a/libfmodstudioL.so"
-        fi
-    fi
-
-    # Handle armeabi-v7a architecture
-    if [[ "$YYPLATFORM_option_android_arch_armv7" == "True" ]]; then
-        echo "Copying Android (armeabi-v7a) dependencies"
-        [[ ! -d "armeabi-v7a/" ]] && mkdir "armeabi-v7a"
-        [[ ! -f "armeabi-v7a/libfmodL.so" ]] && itemCopyTo "$SDK_PATH/api/core/lib/armeabi-v7a/libfmodL.so" "armeabi-v7a/libfmodL.so"
-        [[ ! -f "armeabi-v7a/libfmodstudioL.so" ]] && itemCopyTo "$SDK_PATH/api/studio/lib/armeabi-v7a/libfmodstudioL.so" "armeabi-v7a/libfmodstudioL.so"
-    else
-        if exist "armeabi-v7a"; then
-            itemDelete "armeabi-v7a/libfmodL.so"
-            itemDelete "armeabi-v7a/libfmodstudioL.so"
-        fi
-    fi
-
-    # Handle x86-64 architecture
-    if [[ "$YYPLATFORM_option_android_arch_x86_64" == "True" ]]; then
-        echo "Copying Android (x86-64) dependencies"
-        [[ ! -d "x86-64" ]] && mkdir "x86-64"
-        [[ ! -f "x86-64/libfmodL.so" ]] && itemCopyTo "$SDK_PATH/api/core/lib/x86-64/libfmodL.so" "x86-64/libfmodL.so"
-        [[ ! -f "x86-64/libfmodstudioL.so" ]] && itemCopyTo "$SDK_PATH/api/studio/lib/x86-64/libfmodstudioL.so" "x86-64/libfmodstudioL.so"
-    else
-        if exist "x86-64"; then
-            itemDelete "x86-64/libfmodL.so"
-            itemDelete "x86-64/libfmodstudioL.so"
-        fi
-    fi
-
-    popd >/dev/null
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupiOS() {
-    # Nothing to do here
-    :
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupXbox() {
-    # Nothing to do here
-    :
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupPlaystation() {
-    # Nothing to do here
-    :
-}
-
-# ----------------------------------------------------------------------------------------------------
-setupSwitch() {
-    # Nothing to do here
-    :
-}
-
-# ######################################################################################
-# Script Logic
-
-# Always init the script
+# Always init the script (sets LOG_LABEL/LOG_LEVEL, pulls EXTENSION_NAME, etc.)
 scriptInit
 
-# Version locks
+# -----------------------------------------------------------------------------
+# Fetch extension options
+# -----------------------------------------------------------------------------
+# Version locks (kept for parity; not used directly here)
 optionGetValue "versionStable" RUNTIME_VERSION_STABLE
-optionGetValue "versionBeta" RUNTIME_VERSION_BETA
-optionGetValue "versionDev" RUNTIME_VERSION_DEV
-optionGetValue "versionLTS" RUNTIME_VERSION_LTS
+optionGetValue "versionBeta"   RUNTIME_VERSION_BETA
+optionGetValue "versionDev"    RUNTIME_VERSION_DEV
+optionGetValue "versionLTS"    RUNTIME_VERSION_LTS
 
-# SDK Version
-optionGetValue "sdkVersion" SDK_VERSION
+# Extension specific
+optionGetValue "outputPath"  OUTPUT_PATH
+optionGetValue "projectName" PROJECT_NAME
 
-# SDK Hash
-optionGetValue "winSdkHash" WIN_SDK_HASH
-optionGetValue "macosSdkHash" MACOS_SDK_HASH
-optionGetValue "linuxSdkHash" LINUX_SDK_HASH
-optionGetValue "iosSdkHash" IOS_SDK_HASH
-optionGetValue "androidSdkHash" ANDROID_SDK_HASH
-optionGetValue "xboxOneSdkHash" XBOX_ONE_SDK_HASH
-optionGetValue "xboxSeriesSdkHash" XBOX_SERIES_SDK_HASH
-optionGetValue "ps4SdkHash" PS4_SDK_HASH
-optionGetValue "ps5SdkHash" PS5_SDK_HASH
-optionGetValue "switchSdkHash" SWITCH_SDK_HASH
-
-# SDK Paths
-optionGetValue "winSdkPath" WIN_SDK_PATH
-optionGetValue "macosSdkPath" MACOS_SDK_PATH
-optionGetValue "linuxSdkPath" LINUX_SDK_PATH
-optionGetValue "iosSdkPath" IOS_SDK_PATH
-optionGetValue "androidSdkPath" ANDROID_SDK_PATH
-optionGetValue "xboxSdkPath" XBOX_SDK_PATH
-optionGetValue "ps4SdkPath" PS4_SDK_PATH
-optionGetValue "ps5SdkPath" PS5_SDK_PATH
-optionGetValue "switchSdkPath" SWITCH_SDK_PATH
-
-# Enable Studio?
-optionGetValue "enableStudio" ENABLE_STUDIO
-ENABLE_STUDIO_FLAG=1
-if [[ "$ENABLE_STUDIO" == "True" ]]; then 
-    ENABLE_STUDIO_FLAG=1
+# -----------------------------------------------------------------------------
+# Validate project name (3–16 of a–z, 0–9, hyphen)
+# -----------------------------------------------------------------------------
+if [[ -z "${PROJECT_NAME:-}" ]]; then
+  logError "Extension option 'Project Name' is required and cannot be empty."
 fi
 
-# Error String
-ERROR_SDK_HASH="Invalid FMOD SDK version, sha256 hash mismatch (expected v$SDK_VERSION)."
+if ! [[ "$PROJECT_NAME" =~ ^[a-z0-9-]{3,16}$ ]]; then
+  logError "Project name must be 3-16 chars and only contain lowercase letters, numbers, or hyphens."
+fi
 
-# Checks IDE and Runtime versions
-versionLockCheck "$YYruntimeVersion" $RUNTIME_VERSION_STABLE $RUNTIME_VERSION_BETA $RUNTIME_VERSION_DEV $RUNTIME_VERSION_LTS
+# -----------------------------------------------------------------------------
+# Verify dependencies: npm + devvit
+# -----------------------------------------------------------------------------
+logInformation "Detecting installed 'npm' version..."
+if ! npm --version >/dev/null 2>&1; then
+  logError "Failed to detect npm, please install npm on your system."
+fi
 
-# Ensure we are on the output path
-pushd "$YYoutputFolder" >/dev/null
+# Try to ensure devvit is present/updated (don't hard-fail if global install needs sudo)
+if ! npm install -g devvit; then
+  logWarning "npm install -g devvit failed (permissions?). Will continue assuming 'devvit' is already available on PATH."
+fi
 
-# Call setup method depending on the platform
-# NOTE: the setup method can be (:setupmacOS or :setupLinux)
-setup$YYPLATFORM_name
+logInformation "Detected devvit tool init processing..."
+
+# -----------------------------------------------------------------------------
+# Verify the app exists in Devvit; fail if NOT found
+# -----------------------------------------------------------------------------
+DEVVIT_LIST="$(mktemp -t devvit_apps.XXXXXX.txt)"
+# Run in a subshell so any shell init output doesn't pollute our capture
+( devvit list apps ) >"$DEVVIT_LIST" 2>&1 || true
+
+if [[ ! -s "$DEVVIT_LIST" ]]; then
+  logError "Could not retrieve Devvit app list."
+fi
+
+# We only need to see the project name as a standalone token somewhere on a line.
+# Use awk to match whole fields (handles leading whitespace and avoids grep -w hyphen gotchas).
+if ! awk -v needle="$PROJECT_NAME" '
+  {
+    for (i=1; i<=NF; i++) if ($i==needle) { found=1; exit }
+  }
+  END { exit found ? 0 : 1 }
+' "$DEVVIT_LIST"; then
+  rm -f "$DEVVIT_LIST"
+  logError "Devvit app '$PROJECT_NAME' was not found. Create the app first: https://developers.reddit.com/new."
+fi
+
+rm -f "$DEVVIT_LIST"
+logInformation "Devvit app '$PROJECT_NAME' confirmed."
+
+# -----------------------------------------------------------------------------
+# Resolve the output directory (relative to YYprojectDir)
+# -----------------------------------------------------------------------------
+pathResolve "${YYprojectDir:-/}" "${OUTPUT_PATH:-.}" OUTPUT_DIR
+
+# -----------------------------------------------------------------------------
+# Ensure we have a devvit project (clone or local zip fallback)
+# -----------------------------------------------------------------------------
+if [[ ! -d "$OUTPUT_DIR/$PROJECT_NAME" ]]; then
+  # Ensure output dir exists
+  mkdir -p "$OUTPUT_DIR"
+  pushd "$OUTPUT_DIR" >/dev/null
+
+  logInformation "Attempting to clone template repo..."
+  if ! git clone "https://github.com/YoYoGames/GameMakerRedditTemplate.git" "$PROJECT_NAME"; then
+    logWarning "Git clone failed (private/internal?). Falling back to local zip."
+
+    TEMPLATE_ZIP="$(cd -- "$(dirname -- "$0")" && pwd)/GameMakerRedditTemplate.zip"
+    if [[ ! -f "$TEMPLATE_ZIP" ]]; then
+      popd >/dev/null
+      logError "Fallback zip not found: $TEMPLATE_ZIP"
+    fi
+
+    # Extract as-is (no flatten) into $PROJECT_NAME
+    mkdir -p "$PROJECT_NAME"
+    if ! unzip -q "$TEMPLATE_ZIP" -d "$PROJECT_NAME"; then
+      popd >/dev/null
+      logError "Failed to expand fallback zip."
+    fi
+  fi
+
+  popd >/dev/null
+fi
+
+# -----------------------------------------------------------------------------
+# Run the template's setup script
+# -----------------------------------------------------------------------------
+pushd "$OUTPUT_DIR/$PROJECT_NAME" >/dev/null
+
+# Prefer a POSIX setup script if present; otherwise error
+if [[ -x "./setup-gamemaker-devvit.sh" ]]; then
+  ./setup-gamemaker-devvit.sh "${YYoutputFolder:-}" "$PROJECT_NAME"
+elif [[ -f "./setup-gamemaker-devvit.sh" ]]; then
+  # Not executable, try via sh
+  sh ./setup-gamemaker-devvit.sh "${YYoutputFolder:-}" "$PROJECT_NAME"
+else
+  logError "Current folder '$PWD' not a valid Devvit GameMaker project (missing setup-gamemaker-devvit.sh)."
+fi
 
 popd >/dev/null
 
-exit 0
+# Match BAT’s non-zero exit for tool runner behavior
+exit 1
