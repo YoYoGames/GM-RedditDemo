@@ -35,7 +35,7 @@
   "name":"rm_start",
   "parent":{
     "name":"Rooms",
-    "path":"folders/Reddit Demo/Rooms.yy",
+    "path":"folders/Rooms.yy",
   },
   "parentRoom":null,
   "physicsSettings":{

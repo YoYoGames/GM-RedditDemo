@@ -11,7 +11,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Objects",
-    "path":"folders/Reddit Demo/Objects.yy",
+    "path":"folders/Objects.yy",
   },
   "parentObjectId":null,
   "persistent":false,

@@ -6,7 +6,7 @@
   "name":"reddit_demo_server_api",
   "parent":{
     "name":"Scripts",
-    "path":"folders/Reddit Demo/Scripts.yy",
+    "path":"folders/Scripts.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

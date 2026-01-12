@@ -10,7 +10,7 @@ camera_set_view_mat(_camera, _viewmat);
 
 var _w = window_get_width();
 var _h = window_get_height();
-//if (window_width != _w || window_height != _h) {
+if (window_width != _w || window_height != _h) {
     
     // this is stored (create event)
     window_width = _w;
@@ -23,6 +23,6 @@ var _h = window_get_height();
     
     var _projmat = matrix_build_projection_ortho(window_get_width(), window_get_height(), 1.0, 32000.0);
     camera_set_proj_mat(_camera, _projmat);
-//}
+}
     
 view_camera[0] = _camera;

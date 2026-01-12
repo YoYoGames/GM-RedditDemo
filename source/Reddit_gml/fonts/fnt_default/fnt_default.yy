@@ -191,7 +191,7 @@
   "name":"fnt_default",
   "parent":{
     "name":"Fonts",
-    "path":"folders/Reddit Demo/Fonts.yy",
+    "path":"folders/Fonts.yy",
   },
   "pointRounding":0,
   "ranges":[

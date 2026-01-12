@@ -12,7 +12,7 @@
   "overriddenProperties":[],
   "parent":{
     "name":"Controller",
-    "path":"folders/Reddit Demo/Objects/Controller.yy",
+    "path":"folders/Objects/Controller.yy",
   },
   "parentObjectId":null,
   "persistent":true,
